@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 const tldrSchema = z
   .array(
     z.object({
-      score: z.number(),
-      title: z.string(),
+      score: z.number().nullable(),
+      category_title: z.string(),
       description: z.string(),
       reference: z.string().optional().nullable(),
     })
@@ -22,7 +22,10 @@ async function fetchWebsites() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_KEY!
   );
-  const rows = await client.from("websites").select("*");
+  const rows = await client
+    .from("websites")
+    .select("*")
+    .order("id", { ascending: false });
   if (rows.error) {
     throw rows.error;
   }
@@ -55,10 +58,17 @@ export default function Websites() {
       {websites.map((website) => (
         <div
           key={website.id}
-          className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6 space-y-2"
+          className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6 space-y-6"
         >
-          <div className="flex items-center">
-            <div className="mt-1 text-3xl font-semibold tracking-tight text-gray-900 flex-1">
+          <div className="flex items-center gap-2">
+            {website.image_url && (
+              <img
+                className="h-8 w-8"
+                src={website.image_url}
+                alt={website.name ?? "Logo"}
+              />
+            )}
+            <div className="text-3xl font-semibold tracking-tight text-gray-900 flex-1 truncate">
               {website.name}
             </div>
             {website.terms_url && (
@@ -74,17 +84,20 @@ export default function Websites() {
           {website.tldr &&
             (website.tldr.success ? (
               website.tldr.data ? (
-                <div className="">
+                <div className="grid gap-2">
                   {website.tldr.data?.map((tldr, i) => (
-                    <div key={i}>
-                      {tldr.score && (
-                        <span className="rounded-full bg-slate-200 text-xs px-2 py-1 mr-2">
-                          {tldr.score}
-                        </span>
-                      )}
-                      {tldr.title}
-                      {" - "}
-                      {tldr.description}
+                    <div key={i} className="flex flex-row gap-2">
+                      <span className="rounded-full bg-slate-200 text-xs flex items-center justify-center w-8 h-8">
+                        {tldr.score}
+                      </span>
+                      <div className="flex-1">
+                        <div className="text-sm font-medium">
+                          {tldr.category_title}
+                        </div>
+                        <div className="text-xs text-slate-600">
+                          {tldr.description}
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
