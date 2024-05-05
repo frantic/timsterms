@@ -50,7 +50,10 @@ export default function Websites() {
   });
 
   return (
-    <dl id="websites" className="m-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+    <dl
+      id="websites"
+      className="m-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+    >
       {websites.data?.map((website) => (
         <div
           key={website.id}
@@ -109,9 +112,13 @@ export default function Websites() {
                   ))}
                 </div>
               ) : true ? (
-                <div className="italic text-slate-500">Processing…</div>
+                <div className="italic text-slate-500 animate-pulse">
+                  Processing…
+                </div>
               ) : (
-                <div className="italic text-slate-500">Fetching…</div>
+                <div className="italic text-slate-500 animate-pulse">
+                  Fetching…
+                </div>
               )
             ) : (
               <div className="text-sm text-red-600 p-2 bg-red-50 rounded-md border-red-100 border">
