@@ -1,10 +1,37 @@
-"use client";
-
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
+import { useMutation, useQueryClient } from "react-query";
 
 export default function AddURLForm() {
+  const utils = useQueryClient();
+  const addURL = useMutation(
+    async (data: FormData) => {
+      const response = await fetch("/api/add-url", {
+        method: "POST",
+        body: JSON.stringify({ url: data.get("url") }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to add URL");
+      }
+    },
+    {
+      onSuccess: () => {
+        utils.invalidateQueries("websites");
+        const el = document.getElementById("websites");
+        window.scrollTo({ top: el?.offsetTop, behavior: "smooth" });
+      },
+    }
+  );
+
   return (
-    <form>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        addURL.mutate(new FormData(e.target as HTMLFormElement));
+      }}
+    >
       <div className="flex rounded-lg shadow-lg">
         <input
           type="text"

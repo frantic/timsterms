@@ -24,7 +24,7 @@ async function fetchWebsites() {
   );
   const rows = await client
     .from("websites")
-    .select("*")
+    .select("id, name, url, terms_url, image_url, tldr")
     .order("id", { ascending: false });
 
   if (rows.error) {
@@ -43,6 +43,9 @@ export default function Websites() {
   const websites = useQuery({
     queryKey: "websites",
     queryFn: fetchWebsites,
+    refetchInterval(data, query) {
+      return data?.find((website) => !website.tldr.data) ? 2_000 : false;
+    },
   });
 
   return (
