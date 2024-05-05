@@ -17,5 +17,9 @@ export async function addURL(formData: FormData) {
     process.env.SUPABASE_SERVICE_KEY!
   );
 
-  const { data, error } = await client.from("websites").insert([{ url }]);
+  const base = new URL("/", url);
+
+  const { data, error } = await client
+    .from("websites")
+    .insert([{ url: base.toString(), terms_url: url }]);
 }

@@ -26,9 +26,11 @@ async function fetchWebsites() {
     .from("websites")
     .select("*")
     .order("id", { ascending: false });
+
   if (rows.error) {
     throw rows.error;
   }
+
   return (
     rows.data?.map((row) => ({
       ...row,
@@ -51,10 +53,8 @@ export default function Websites() {
     fetchWebsites().then((websites) => setWebsites(websites));
   }, []);
 
-  console.log(websites);
-
   return (
-    <dl className="m-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+    <dl id="websites" className="m-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
       {websites.map((website) => (
         <div
           key={website.id}
@@ -69,7 +69,7 @@ export default function Websites() {
               />
             )}
             <div className="text-3xl font-semibold tracking-tight text-gray-900 flex-1 truncate">
-              {website.name}
+              {website.name ?? website.url ?? website.terms_url}
             </div>
             {website.terms_url && (
               <a
@@ -101,8 +101,10 @@ export default function Websites() {
                     </div>
                   ))}
                 </div>
-              ) : (
+              ) : website.terms ? (
                 <div className="italic text-slate-500">Processing…</div>
+              ) : (
+                <div className="italic text-slate-500">Fetching…</div>
               )
             ) : (
               <div className="text-sm text-red-600 p-2 bg-red-50 rounded-md border-red-100 border">
