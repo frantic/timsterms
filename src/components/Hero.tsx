@@ -61,7 +61,7 @@ export default function Hero() {
             </a>
           </div> */}
           <h1 className="mt-10 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Simplify Terms of Service
+            Simplify Terms&nbsp;of&nbsp;Service
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
             Use AI to translate from complicated legal jargon to simple terms
