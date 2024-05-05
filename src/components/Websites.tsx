@@ -96,7 +96,7 @@ export default function Websites() {
                     </div>
                   ))}
                 </div>
-              ) : website.terms ? (
+              ) : true ? (
                 <div className="italic text-slate-500">Processing…</div>
               ) : (
                 <div className="italic text-slate-500">Fetching…</div>
