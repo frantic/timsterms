@@ -1,6 +1,6 @@
 import AddURLForm from "./AddURLForm";
 
-export default async function Hero() {
+export default function Hero() {
   return (
     <div className="relative isolate overflow-hidden bg-white">
       <svg

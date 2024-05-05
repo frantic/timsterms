@@ -3,7 +3,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { Database } from "../../types/supabase";
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 
 const tldrSchema = z
   .array(
@@ -39,23 +39,15 @@ async function fetchWebsites() {
   );
 }
 
-type PromiseReturnType<T extends (...args: any) => Promise<any>> = T extends (
-  ...args: any
-) => Promise<infer U>
-  ? U
-  : never;
-type TWebsite = PromiseReturnType<typeof fetchWebsites>[number];
-
 export default function Websites() {
-  const [websites, setWebsites] = useState<Array<TWebsite>>([]);
-
-  useEffect(() => {
-    fetchWebsites().then((websites) => setWebsites(websites));
-  }, []);
+  const websites = useQuery({
+    queryKey: "websites",
+    queryFn: fetchWebsites,
+  });
 
   return (
     <dl id="websites" className="m-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-      {websites.map((website) => (
+      {websites.data?.map((website) => (
         <div
           key={website.id}
           className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6 space-y-6"

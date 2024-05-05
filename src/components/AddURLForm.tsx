@@ -1,16 +1,10 @@
 "use client";
 
-import { addURL } from "./actions";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 
 export default function AddURLForm() {
   return (
-    <form
-      action={async (data) => {
-        await addURL(data);
-        window.location.reload();
-      }}
-    >
+    <form>
       <div className="flex rounded-lg shadow-lg">
         <input
           type="text"
