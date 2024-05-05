@@ -1,6 +1,23 @@
+import { createClient } from "@supabase/supabase-js";
 import AddURLForm from "./AddURLForm";
+import { Database } from "../../types/supabase";
+import { useQuery } from "react-query";
+
+async function fetchWebsitesCount() {
+  const client = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_KEY!
+  );
+  const rows = await client.from("websites").select("id", { count: "exact" });
+
+  return rows.count;
+}
 
 export default function Hero() {
+  const count = useQuery({
+    queryKey: "count",
+    queryFn: fetchWebsitesCount,
+  });
   return (
     <div className="relative isolate overflow-hidden bg-white">
       <svg
@@ -28,11 +45,7 @@ export default function Hero() {
       </svg>
       <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 sm:pb-32 lg:flex lg:px-8 lg:py-40">
         <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-8">
-          <img
-            className="h-11"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
-          />
+          <img className="h-11" src="/logo.png" alt="Tim's Terms" />
           {/* <div className="mt-24 sm:mt-32 lg:mt-16">
             <a href="#" className="inline-flex space-x-6">
               <span className="rounded-full bg-indigo-600/10 px-3 py-1 text-sm font-semibold leading-6 text-indigo-600 ring-1 ring-inset ring-indigo-600/10">
@@ -59,10 +72,16 @@ export default function Hero() {
           </div>
           <div className="mt-10 flex items-center gap-x-6">
             <a
-              href="#"
+              href="#websites"
               className="text-sm font-semibold leading-6 text-gray-900"
+              onClick={(e) => {
+                e.preventDefault();
+                const el = document.getElementById("websites");
+                window.scrollTo({ top: el?.offsetTop, behavior: "smooth" });
+              }}
             >
-              See {6} Examples <span aria-hidden="true">→</span>
+              See {count.data ?? "All"} Examples{" "}
+              <span aria-hidden="true">→</span>
             </a>
           </div>
         </div>

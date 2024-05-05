@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { Database } from "../../types/supabase";
 import { useQuery } from "react-query";
+import clsx from "clsx";
 
 const tldrSchema = z
   .array(
@@ -82,7 +83,18 @@ export default function Websites() {
                 <div className="grid gap-2">
                   {website.tldr.data?.map((tldr, i) => (
                     <div key={i} className="flex flex-row gap-2">
-                      <span className="rounded-full bg-slate-200 text-xs flex items-center justify-center w-8 h-8">
+                      <span
+                        className={clsx(
+                          "rounded-full text-xs flex items-center justify-center w-8 h-8",
+                          (tldr.score ?? 0) >= 8
+                            ? "bg-green-200"
+                            : (tldr.score ?? 0) > 5
+                            ? "bg-yellow-200"
+                            : tldr.score === null
+                            ? ""
+                            : "bg-red-200"
+                        )}
+                      >
                         {tldr.score}
                       </span>
                       <div className="flex-1">
