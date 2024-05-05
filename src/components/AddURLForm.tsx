@@ -1,4 +1,5 @@
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
+import clsx from "clsx";
 import { useMutation, useQueryClient } from "react-query";
 
 export default function AddURLForm() {
@@ -32,7 +33,12 @@ export default function AddURLForm() {
         addURL.mutate(new FormData(e.target as HTMLFormElement));
       }}
     >
-      <div className="flex rounded-lg shadow-lg">
+      <div
+        className={clsx(
+          "flex rounded-lg shadow-lg",
+          addURL.isLoading && "animate-pulse"
+        )}
+      >
         <input
           type="text"
           name="url"
